@@ -16,3 +16,5 @@ theorem Answer.eq_of_le_le (a b  : Answer) :
       case refl => rfl 
       case no_le => rfl      
     case refl => rfl 
+
+/- Correct solution -/
