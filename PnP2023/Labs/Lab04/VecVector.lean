@@ -18,16 +18,31 @@ universe u
 
 /-- Convert a `Vector` to a `Vec` -/
 def Vec.ofVector {α : Type u}: (n : ℕ) →  Vector α n → Vec α n 
-| _, _ => sorry
+| 0, _ => .nil
+|n+1, ⟨.cons head tail, h⟩ => Vec.cons head (Vec.ofVector n ⟨tail, Nat.succ.inj h⟩ ) 
 
+--Nat.succ.inj h⟩ ) 
 /-- Convert a `Vec` to a `Vector` -/
 def Vec.toVector {α : Type u}: (n : ℕ) →  Vec α n → Vector α n
-| _, _ => sorry
+|0, .nil => ⟨[], rfl⟩
+|n+1, .cons head tail => 
+  let ⟨l,h⟩ := Vec.toVector n tail 
+  ⟨head::l, by simp only[List.length_cons,h]⟩    
 
 /-- Mapping a `Vec` to a `Vector` and back gives the original `Vec` -/
 theorem Vec.ofVector.toVector {α : Type u} (n : ℕ) (v : Vec α n) :
-  Vec.ofVector n (Vec.toVector n v) = v := sorry
+  Vec.ofVector n (Vec.toVector n v) = v := by
+  induction v 
+  case nil => rfl 
+  case cons n head tail h_ => 
+   rw[toVector]
+   cases h:Vec.toVector n tail
+   rw[ofVector, ←h, h_ ]  
+    
+  
 
 /-- Mapping a `Vector` to a `Vec` and back gives the original `Vector` -/
 theorem Vec.toVector.ofVector {α : Type u} (n : ℕ) (v : Vector α n) :
-  Vec.toVector n (Vec.ofVector n v) = v := sorry
+  Vec.toVector n (Vec.ofVector n v) = v := 
+  induction n with 
+  sorry

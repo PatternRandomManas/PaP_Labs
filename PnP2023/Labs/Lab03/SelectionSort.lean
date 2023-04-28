@@ -31,8 +31,39 @@ def List.sorted: List ℕ →  Prop
 -/
 
 /-- Members of a list are members of the given sorted list -/
-theorem selectionSort_mem_of_mem {a : ℕ} {l : List ℕ} (hyp : a ∈ l) : a ∈ selectionSort l := by 
-  sorry
+theorem selectionSort_mem_of_mem {a : ℕ} {l : List ℕ} (hyp : a ∈ l) : a ∈ selectionSort l := by
+by_cases c: l = []
+·simp[c] at hyp
+·match l with
+| head :: tail =>
+  by_cases c: tail = []
+  ·rw[selectionSort]
+   ·simp[c]
+    ·apply Or.elim (List.mem_cons.1 hyp)
+     ·intro hyp_
+      rw[hyp_]
+      apply Or.inl rfl
+     ·intro hyp_
+      apply Or.inr
+      simp[hyp_,c] at hyp_
+ ·have result1: head::tail = [] := 
+  by 
+   intro contradict    
+   simp[hyp, contradict] at hyp
+ by_cases d: a = smallest (head::tail) result1
+ ·simp[d]
+  rw[selectionSort]
+  simp[c]
+ ·rw[selectionSort]    
+  simp [c,d]
+ apply selectionSort_mem_of_mem
+ apply List.mem_remove_iff.2
+ simp[d]
+ apply List.mem_cons.1 hyp
+ sorry       
+  
+    
+      
 
 /-!
 - Problem 2: show that members of the sorted list are members of the given list(remove sorry). 
@@ -40,7 +71,20 @@ theorem selectionSort_mem_of_mem {a : ℕ} {l : List ℕ} (hyp : a ∈ l) : a �
 
 /-- Members of the sorted list are members of the given list -/
 theorem selectionSort_mem_mem {a : ℕ} {l : List ℕ} (hyp : a ∈ selectionSort l) : a ∈ l := by 
-  sorry
+   rw[selectionSort] at hyp
+   by_cases c: l = []
+   ·simp[c] at hyp
+   ·by_cases d: a = smallest l c
+    ·simp[d]
+     apply smallest_in_list
+    ·simp[c,d] at hyp
+     have result1: a ∈ List.remove (smallest l (c: l ≠ [])) l := by
+      apply selectionSort_mem_of_mem hyp
+     apply List.mem_of_mem_remove result1
+  termination_by _ _ => l.length
+  decreasing_by   
+      
+ 
 
 theorem selectionSort_mem (l : List ℕ) (a : ℕ) : a ∈ l ↔ a ∈ selectionSort l := by 
   apply Iff.intro
@@ -54,5 +98,26 @@ theorem selectionSort_mem (l : List ℕ) (a : ℕ) : a ∈ l ↔ a ∈ selection
 
 /-- The result of `selectionSort` is sorted -/
 theorem selectionSort_sorted (l : List ℕ) : (selectionSort l).sorted := 
-    by sorry
+    by 
+    by_cases c: l = []
+    ·simp[List.sorted, c]
+    ·rw[selectionSort]
+     have result: l≠[] := by
+      simp[c]
+     simp[result]
+     simp[List.sorted]
+     simp[List.le_all]
+     intro b h 
+     apply smallest_le
+     have result2: b ∈ List.remove (smallest (l) (result)) (l) := by
+      apply selectionSort_mem_mem
+     simp[h]
+     apply List.mem_of_mem_remove result2
+     simp[c, result, List.sorted]
+     apply selectionSort_sorted
+termination_by _ _ => l.length
+decreasing_by
+ apply remove_mem_length
+ apply smallest_in_list
+sorry
       
