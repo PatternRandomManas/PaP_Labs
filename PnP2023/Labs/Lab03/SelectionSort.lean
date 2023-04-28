@@ -82,7 +82,7 @@ theorem selectionSort_mem_mem {a : ℕ} {l : List ℕ} (hyp : a ∈ selectionSor
       apply selectionSort_mem_of_mem hyp
      apply List.mem_of_mem_remove result1
   termination_by _ _ => l.length
-  decreasing_by   
+  decreasing_by  sorry
       
  
 
@@ -121,3 +121,4 @@ decreasing_by
  apply smallest_in_list
 sorry
       
+-- No correct solutions, 2/30

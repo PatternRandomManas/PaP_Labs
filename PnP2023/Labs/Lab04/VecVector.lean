@@ -46,3 +46,5 @@ theorem Vec.toVector.ofVector {α : Type u} (n : ℕ) (v : Vector α n) :
   Vec.toVector n (Vec.ofVector n v) = v := 
   induction n with 
   sorry
+
+-- 3 of 4 correct, but late submission; 25/40
